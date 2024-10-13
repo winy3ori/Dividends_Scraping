@@ -71,6 +71,7 @@ public class YahooFinanceScraper implements Scraper{
         return scrapResult;
     }
 
+
     @Override
     public Company scrapCompanyByTicker(String ticker) {
         String url = String.format(SUMMARY_URL, ticker, ticker);
