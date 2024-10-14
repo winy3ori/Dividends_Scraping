@@ -1,5 +1,6 @@
 package example.dividends_project.model;
 
+import example.dividends_project.persist.entity.MemberEntity;
 import lombok.Data;
 
 import java.util.List;

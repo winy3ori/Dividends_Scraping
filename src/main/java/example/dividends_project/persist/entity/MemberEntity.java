@@ -1,5 +1,6 @@
-package example.dividends_project.model;
+package example.dividends_project.persist.entity;
 
+import example.dividends_project.model.MemberDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,8 +28,12 @@ public class MemberEntity implements UserDetails {
     private String password;
 
     //    @Convert    // List값 저장 위한 어노테이션, 리스트를 자동으로 StringListConverter.class 정의한 값으로 변환
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER) //fetch를 추가하니 지연 로딩이 해결됐다... 이유는 뭘까... 다음에 알아보자
     private List<String> roles;
+
+    public MemberDto toDto() {
+        return new MemberDto(this.username, this.roles);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

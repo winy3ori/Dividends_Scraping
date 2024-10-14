@@ -1,5 +1,8 @@
 package example.dividends_project.security;
 
+import example.dividends_project.model.MemberDto;
+import example.dividends_project.persist.repository.MemberRepository;
+import example.dividends_project.service.MemberService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -8,11 +11,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.jsoup.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -21,6 +29,7 @@ public class TokenProvider {
     private static final long TOKEN_EXPIRED_TIME = 1000 * 60 * 60; // 1시간
     private static final String KEY_VALUE = "roles";    // 상수값은 선언해서 사용하는게 좋다
 
+    private final MemberService memberService;
 
     @Value("{spring.jwt.secret}")
     private String secretKey;
@@ -47,6 +56,21 @@ public class TokenProvider {
                 .signWith(SignatureAlgorithm.HS512, this.secretKey) // 사용할 암호화 알고리즘 (HS512), 비밀키
                 .compact(); // builder 종료
 
+    }
+
+//    public Authentication getAuthentication(String jwt) {
+//        UserDetails userDetails = this.memberService.loadUserByUsername(this.getUsername(jwt));
+//        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+//    }
+
+    public Authentication getAuthentication(String jwt) {
+        MemberDto memberDTO = this.memberService.loadUserByUsername(this.getUsername(jwt));
+        if (memberDTO == null) {
+            return null; // 또는 적절한 예외 처리
+        }
+        return new UsernamePasswordAuthenticationToken(memberDTO, "", memberDTO.getRoles().stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList()));
     }
 
     public String getUsername(String token) {

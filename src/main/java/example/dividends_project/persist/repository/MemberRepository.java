@@ -1,6 +1,6 @@
 package example.dividends_project.persist.repository;
 
-import example.dividends_project.model.MemberEntity;
+import example.dividends_project.persist.entity.MemberEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
