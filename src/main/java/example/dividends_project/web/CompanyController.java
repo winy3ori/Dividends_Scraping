@@ -28,7 +28,7 @@ public class CompanyController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('READ')")   // 쓰기 권한이 있는 유저만 API 호출 가능
+    @PreAuthorize("hasRole('READ')")   // 읽기 권한이 있는 유저만 API 호출 가능
     public ResponseEntity<?> searchCompany(final Pageable pageable) {
         Page<CompanyEntity> companies = this.companyService.getAllCompany(pageable);
         return ResponseEntity.ok(companies);
