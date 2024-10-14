@@ -1,6 +1,5 @@
 package example.dividends_project.security;
 
-import example.dividends_project.model.MemberDto;
 import example.dividends_project.persist.repository.MemberRepository;
 import example.dividends_project.service.MemberService;
 import io.jsonwebtoken.Claims;
@@ -58,20 +57,20 @@ public class TokenProvider {
 
     }
 
-//    public Authentication getAuthentication(String jwt) {
-//        UserDetails userDetails = this.memberService.loadUserByUsername(this.getUsername(jwt));
-//        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-//    }
-
     public Authentication getAuthentication(String jwt) {
-        MemberDto memberDTO = this.memberService.loadUserByUsername(this.getUsername(jwt));
-        if (memberDTO == null) {
-            return null; // 또는 적절한 예외 처리
-        }
-        return new UsernamePasswordAuthenticationToken(memberDTO, "", memberDTO.getRoles().stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList()));
+        UserDetails userDetails = this.memberService.loadUserByUsername(this.getUsername(jwt));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
+
+//    public Authentication getAuthentication(String jwt) {
+//        MemberDto memberDTO = this.memberService.loadUserByUsername(this.getUsername(jwt));
+//        if (memberDTO == null) {
+//            return null; // 또는 적절한 예외 처리
+//        }
+//        return new UsernamePasswordAuthenticationToken(memberDTO, "", memberDTO.getRoles().stream()
+//                .map(SimpleGrantedAuthority::new)
+//                .collect(Collectors.toList()));
+//    }
 
     public String getUsername(String token) {
         return this.parseClaims(token).getSubject();

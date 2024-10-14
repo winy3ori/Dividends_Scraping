@@ -1,11 +1,11 @@
 package example.dividends_project.service;
 
 import example.dividends_project.model.Auth;
-import example.dividends_project.model.MemberDto;
 import example.dividends_project.persist.entity.MemberEntity;
 import example.dividends_project.persist.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,17 +21,17 @@ public class MemberService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
 
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        return this.memberRepository.findByUsername(username)
-//                .orElseThrow(() -> new UsernameNotFoundException("couldn't find user -> " + username));
-//    }
-
     @Override
-    public MemberDto loadUserByUsername(String username) {
-        Optional<MemberEntity> member = memberRepository.findByUsername(username);
-        return member.map(MemberEntity::toDto).orElse(null); // Optional을 안전하게 처리
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return this.memberRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("couldn't find user -> " + username));
     }
+
+//    @Override
+//    public MemberDto loadUserByUsername(String username) {
+//        Optional<MemberEntity> member = memberRepository.findByUsername(username);
+//        return member.map(MemberEntity::toDto).orElse(null); // Optional을 안전하게 처리
+//    }
 
 
     // 회원가입
