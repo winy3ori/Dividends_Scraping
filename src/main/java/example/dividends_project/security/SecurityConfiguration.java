@@ -36,6 +36,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/h2-console/**").permitAll()
                                 .requestMatchers("/auth/signup", "/auth/signin").permitAll()  // 허용할 경로 설정
                                 .requestMatchers("/company").permitAll()
+                                .requestMatchers("/finance//dividend/").permitAll()
 //                                .requestMatchers("/error/**").permitAll()
                                 .anyRequest().authenticated()
                 )
